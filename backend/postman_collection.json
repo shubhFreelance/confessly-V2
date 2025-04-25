@@ -1,0 +1,807 @@
+{
+	"info": {
+		"_postman_id": "random-uuid",
+		"name": "Campus Confessions API",
+		"description": "API documentation for Campus Confessions platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Create Super Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"superadmin\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"your_secure_password\",\n    \"adminSecret\": \"{{ADMIN_SECRET}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/create-super-admin",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "create-super-admin"]
+						}
+					}
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"testuser\",\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\",\n    \"collegeName\": \"Test College\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/register",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/login",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "User Profile",
+			"item": [
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/profile",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", "profile"]
+						}
+					}
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"updated_username\",\n    \"email\": \"updated@example.com\",\n    \"collegeName\": \"Updated College\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/profile",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", "profile"]
+						}
+					}
+				},
+				{
+					"name": "Get Confession Link",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/confession-link/:username",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", "confession-link", ":username"]
+						}
+					}
+				},
+				{
+					"name": "Get Profile By Link",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/profile/:confessionLink",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", "profile", ":confessionLink"]
+						}
+					}
+				},
+				{
+					"name": "Get User Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/stats",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", "stats"]
+						}
+					}
+				},
+				{
+					"name": "Get Message Count",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/users/message-count",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "users", "message-count"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Confessions",
+			"item": [
+				{
+					"name": "Create Confession",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is a test confession\",\n    \"collegeName\": \"Test College\",\n    \"isAnonymous\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions"]
+						}
+					}
+				},
+				{
+					"name": "Get All Confessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions?page=1&limit=10&collegeName=Test College",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "collegeName",
+									"value": "Test College"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Trending Confessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions/trending/:collegeName",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions", "trending", ":collegeName"]
+						}
+					}
+				},
+				{
+					"name": "Get User Confessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions/user",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions", "user"]
+						}
+					}
+				},
+				{
+					"name": "Get Single Confession",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions", ":id"]
+						}
+					}
+				},
+				{
+					"name": "Delete Confession",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions", ":id"]
+						}
+					}
+				},
+				{
+					"name": "Report Confession",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Inappropriate content\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/confessions/:id/report",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "confessions", ":id", "report"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Create Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"This is a test comment\",\n    \"confessionId\": \"confession_id_here\",\n    \"isAnonymous\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/comments",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "comments"]
+						}
+					}
+				},
+				{
+					"name": "Get Comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/comments/:confessionId?page=1&limit=10",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "comments", ":confessionId"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/comments/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "comments", ":id"]
+						}
+					}
+				},
+				{
+					"name": "Report Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"Inappropriate content\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/comments/:id/report",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "comments", ":id", "report"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Rankings",
+			"item": [
+				{
+					"name": "Get College Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/rankings/college/:collegeName",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "rankings", "college", ":collegeName"]
+						}
+					}
+				},
+				{
+					"name": "Get Weekly Rankings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/rankings/weekly",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "rankings", "weekly"]
+						}
+					}
+				},
+				{
+					"name": "Get Monthly Rankings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/rankings/monthly",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "rankings", "monthly"]
+						}
+					}
+				},
+				{
+					"name": "Get User Rankings",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/rankings/user",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "rankings", "user"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Premium Features",
+			"item": [
+				{
+					"name": "Update Theme",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"theme\": \"dark\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/premium/theme",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "premium", "theme"]
+						}
+					}
+				},
+				{
+					"name": "Toggle Private Vault",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/premium/private-vault/toggle",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "premium", "private-vault", "toggle"]
+						}
+					}
+				},
+				{
+					"name": "Add to Private Vault",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/premium/private-vault/:confessionId",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "premium", "private-vault", ":confessionId"]
+						}
+					}
+				},
+				{
+					"name": "Remove from Private Vault",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/premium/private-vault/:confessionId",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "premium", "private-vault", ":confessionId"]
+						}
+					}
+				},
+				{
+					"name": "Purchase Boost Pack",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"packType\": \"trending\",\n    \"duration\": 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/premium/boost-pack",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "premium", "boost-pack"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Ads & Promotions",
+			"item": [
+				{
+					"name": "Get Banner Ads",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/ads/banners",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "ads", "banners"]
+						}
+					}
+				},
+				{
+					"name": "Create Promotion",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"College Event\",\n    \"content\": \"Join our event!\",\n    \"collegeName\": \"Test College\",\n    \"duration\": 7\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/ads/promotions",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "ads", "promotions"]
+						}
+					}
+				},
+				{
+					"name": "Get Active Promotions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/ads/promotions",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "ads", "promotions"]
+						}
+					}
+				},
+				{
+					"name": "Update Promotion",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated Event\",\n    \"content\": \"Updated content\",\n    \"duration\": 14\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/ads/promotions/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "ads", "promotions", ":id"]
+						}
+					}
+				},
+				{
+					"name": "Delete Promotion",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/ads/promotions/:id",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "ads", "promotions", ":id"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Get Reported Confessions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/admin/reported-confessions",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "admin", "reported-confessions"]
+						}
+					}
+				},
+				{
+					"name": "Get Blocked Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/admin/blocked-users",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "admin", "blocked-users"]
+						}
+					}
+				},
+				{
+					"name": "Get Colleges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/admin/colleges",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "admin", "colleges"]
+						}
+					}
+				},
+				{
+					"name": "Get Admin Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/admin/stats",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "admin", "stats"]
+						}
+					}
+				},
+				{
+					"name": "Block User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/admin/users/:userId/block",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "admin", "users", ":userId", "block"]
+						}
+					}
+				},
+				{
+					"name": "Unblock User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/admin/users/:userId/unblock",
+							"host": ["{{BASE_URL}}"],
+							"path": ["api", "admin", "users", ":userId", "unblock"]
+						}
+					}
+				}
+			]
+		}
+	]
+} 
