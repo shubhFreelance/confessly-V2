@@ -45,7 +45,7 @@ export const getConfession = async (id: string): Promise<Confession> => {
   return response.data;
 };
 
-export const createConfession = async (data: { content: string; isAnonymous: boolean }): Promise<Confession> => {
+export const createConfession = async (data: { content: string; isAnonymous: boolean, collegeName: string }): Promise<Confession> => {
   const response = await axios.post(`${API_URL}/confessions`, data);
   return response.data;
 };

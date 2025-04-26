@@ -7,6 +7,7 @@ import  Switch  from './ui/Switch';
 import  Label  from './ui/Label';
 import  {useToast}  from './ui/use-toast';
 import { createConfession } from '../services/confessionService';
+import { useAuth } from '../context/AuthContext';
 
 interface ConfessionFormProps {
   onSuccess?: () => void;
@@ -18,15 +19,26 @@ export const ConfessionForm: React.FC<ConfessionFormProps> = ({ onSuccess }) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { user} = useAuth();
+  1
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user?.collegeName) {
+      toast({
+        title: 'Error',
+        description: 'College name is required',
+        variant: 'destructive',
+      });
+      return;
+    }
     setIsSubmitting(true);
 
     try {
       await createConfession({
         content,
         isAnonymous,
+        collegeName: user.collegeName
       });
 
       toast({
