@@ -18,9 +18,13 @@ const confessionValidation = [
     .withMessage('Confession content is required')
     .isLength({ max: 1000 })
     .withMessage('Confession must not exceed 1000 characters'),
-  body('recipientUsername')
+  body('collegeName')
     .notEmpty()
-    .withMessage('Recipient username is required')
+    .withMessage('College name is required'),
+  body('isAnonymous')
+    .optional()
+    .isBoolean()
+    .withMessage('isAnonymous must be a boolean value')
 ];
 
 const reactionValidation = [

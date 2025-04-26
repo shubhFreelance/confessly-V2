@@ -21,7 +21,7 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string, collegeName: string) => Promise<void>;
   logout: () => void;
   updateUser: (user: User) => void;
@@ -57,10 +57,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializeAuth();
   }, []);
 
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
       setError(null);
-      const response = await authAPI.login(username, password);
+      const response = await authAPI.login(email, password);
       const { user: userData, token: newToken } = response.data;
       
       setUser(userData);

@@ -1,10 +1,11 @@
-import { Router } from 'express';
-import { reactToConfession } from '../controllers/confessionController';
-import { authenticate } from '../middleware/auth';
+import express from 'express';
+import { auth } from '../middleware/auth';
+import { addReaction, removeReaction } from '../controllers/reactionController';
 
-const router = Router();
+const router = express.Router();
 
-// Add reaction to confession
-router.post('/:confessionId', authenticate, reactToConfession);
+// Protected routes
+router.post('/:confessionId', auth, addReaction);
+router.delete('/:confessionId', auth, removeReaction);
 
 export default router; 

@@ -129,4 +129,53 @@ export const purchaseBoostPack = async (req: AuthRequest, res: Response) => {
     console.error('Error purchasing boost pack:', error);
     res.status(500).json({ message: 'Server error while purchasing boost pack' });
   }
+};
+
+export const getPremiumFeatures = async (req: Request, res: Response) => {
+  try {
+    const features = {
+      basic: ['Basic profile', 'Limited confessions'],
+      premium: ['Unlimited confessions', 'Custom themes', 'Private vault'],
+      platinum: ['All premium features', 'Priority support', 'Analytics']
+    };
+    res.json(features);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching premium features' });
+  }
+};
+
+export const upgradeToPremium = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: 'Not authorized' });
+
+    user.subscription = {
+      tier: 'platinum',
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      messageCount: 0,
+      allowedColleges: user.subscription.allowedColleges
+    };
+    await user.save();
+    res.json({ message: 'Upgraded to premium successfully', subscription: user.subscription });
+  } catch (error) {
+    res.status(500).json({ message: 'Error upgrading to premium' });
+  }
+};
+
+export const cancelPremium = async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: 'Not authorized' });
+
+    user.subscription = {
+      tier: 'basic',
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      messageCount: 0,
+      allowedColleges: user.subscription.allowedColleges
+    };
+    await user.save();
+    res.json({ message: 'Premium subscription cancelled', subscription: user.subscription });
+  } catch (error) {
+    res.status(500).json({ message: 'Error cancelling premium' });
+  }
 }; 

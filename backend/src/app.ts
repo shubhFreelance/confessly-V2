@@ -18,7 +18,7 @@ const httpServer = createServer(app);
 const io = new Server(httpServer);
 
 // Initialize services
-NotificationService.initialize(io);
+NotificationService.setSocketIO(io);
 MonitoringService.startMonitoring();
 CacheService.initialize();
 BackupService.initialize();

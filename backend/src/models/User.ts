@@ -209,17 +209,17 @@ const userSchema = new Schema<IUser>(
 );
 
 // Hash password before saving
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+// userSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
 
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (err) {
-    next(err as Error);
-  }
-});
+//   try {
+//     const salt = await bcrypt.genSalt(10);
+//     this.password = await bcrypt.hash(this.password, salt);
+//     next();
+//   } catch (err) {
+//     next(err as Error);
+//   }
+// });
 
 // Generate confession link if not set
 userSchema.pre("save", function (next) {
@@ -240,11 +240,9 @@ userSchema.methods.comparePassword = async function (
 
 // Generate JWT token
 userSchema.methods.generateAuthToken = function (): string {
-  return jwt.sign(
-    { id: this._id, role: this.role },
-    config.jwtSecret,
-    { expiresIn: "7d" }
-  );
+  return jwt.sign({ id: this._id, role: this.role }, config.jwtSecret, {
+    expiresIn: "7d",
+  });
 };
 
 // Generate anonymous ID

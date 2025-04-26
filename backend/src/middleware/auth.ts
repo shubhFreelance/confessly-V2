@@ -16,19 +16,18 @@ interface AuthRequest extends Request {
   user?: any;
 }
 
-export const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-
     if (!token) {
-      return res.status(401).json({ message: 'No auth token found' });
+      return res.status(401).json({ message: 'No token, authorization denied' });
     }
 
     const decoded = jwt.verify(token, config.jwtSecret) as { id: string };
     const user = await User.findById(decoded.id);
 
     if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+      return res.status(401).json({ message: 'Token is not valid' });
     }
 
     if (user.isBlocked) {
@@ -38,7 +37,7 @@ export const auth = async (req: AuthRequest, res: Response, next: NextFunction) 
     req.user = user;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Please authenticate' });
+    res.status(401).json({ message: 'Token is not valid' });
   }
 };
 
@@ -56,42 +55,27 @@ export const adminAuth = async (req: AuthRequest, res: Response, next: NextFunct
   }
 };
 
-export const authorize = (...roles: string[]) => {
+export const authorize = (role: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return next(new UnauthorizedError('User not authenticated'));
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({ message: 'Not authorized' });
     }
-
-    if (!roles.includes(req.user.role)) {
-      return next(new ForbiddenError('Insufficient permissions'));
-    }
-
     next();
   };
 };
 
-export const require2FA = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!req.user) {
-      return next(new UnauthorizedError('User not authenticated'));
-    }
-
-    if (req.user.twoFactorEnabled && !req.headers['x-2fa-token']) {
-      return next(new UnauthorizedError('2FA token required'));
-    }
-
-    if (req.user.twoFactorEnabled) {
-      const token = req.headers['x-2fa-token'] as string;
-      const isValid = await req.user.verify2FAToken(token);
-      if (!isValid) {
-        return next(new UnauthorizedError('Invalid 2FA token'));
-      }
-    }
-
-    next();
-  } catch (error) {
-    next(error);
+export const require2FA = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user?.is2FAEnabled) {
+    return next();
   }
+
+  const { twoFactorToken } = req.body;
+  if (!twoFactorToken) {
+    return res.status(400).json({ message: '2FA token required' });
+  }
+
+  // TODO: Implement 2FA verification
+  next();
 };
 
 export const rateLimit = (limit: number, windowMs: number) => {

@@ -37,9 +37,12 @@ export const profanityFilter = async (text: string): Promise<boolean> => {
 };
 
 // Optional: Local fallback profanity filter
-const commonOffensiveWordsLocal = [
-  // Add your list of words to filter
-  // This is a basic implementation and should be enhanced for production
+const commonOffensiveWordsLocal: string[] = [
+  'bad',
+  'inappropriate',
+  'offensive',
+  'explicit',
+  'vulgar'
 ];
 
 export const localProfanityFilter = (content: string): string => {

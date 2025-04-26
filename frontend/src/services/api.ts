@@ -26,8 +26,8 @@ api.interceptors.request.use(
 
 // Authentication API
 export const authAPI = {
-  login: (username: string, password: string) => 
-    api.post('/auth/login', { username, password }),
+  login: (email: string, password: string) => 
+    api.post('/auth/login', { email, password }),
   register: (username: string, email: string, password: string, collegeName: string) =>
     api.post('/auth/register', { username, email, password, collegeName }),
   logout: () => {
@@ -46,8 +46,8 @@ export const userAPI = {
 
 // Confession API
 export const confessionAPI = {
-  createConfession: (content: string, isAnonymous: boolean) =>
-    api.post('/confessions', { content, isAnonymous }),
+  createConfession: (content: string, collegeName: string) =>
+    api.post('/confessions', { content, collegeName }),
   getConfessions: (page = 1, limit = 10) =>
     api.get(`/confessions?page=${page}&limit=${limit}`),
   getConfessionById: (id: string) =>

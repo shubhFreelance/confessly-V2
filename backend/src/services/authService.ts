@@ -49,36 +49,36 @@ export class AuthService {
     }
   }
 
-  static async login(email: string, password: string) {
-    try {
-      // Find user
-      const user = await User.findOne({ email });
-      if (!user) {
-        throw new UnauthorizedError("Invalid credentials");
-      }
+  // static async login(email: string, password: string) {
+  //   try {
+  //     // Find user
+  //     const user = await User.findOne({ email });
+  //     if (!user) {
+  //       throw new UnauthorizedError("Invalid credentials");
+  //     }
 
-      // Check password
-      const isValidPassword = await user.comparePassword(password);
-      if (!isValidPassword) {
-        throw new UnauthorizedError("Invalid credentials");
-      }
+  //     // Check password
+  //     const isValidPassword = await user.comparePassword(password);
+  //     if (!isValidPassword) {
+  //       throw new UnauthorizedError("Invalid credentials");
+  //     }
 
-      // Generate tokens
-      const tokens = this.generateTokens(user._id.toString());
+  //     // Generate tokens
+  //     const tokens = this.generateTokens(user._id.toString());
 
-      // Update last login
-      user.lastLogin = new Date();
-      await user.save();
+  //     // Update last login
+  //     user.lastLogin = new Date();
+  //     await user.save();
 
-      return {
-        user: this.sanitizeUser(user),
-        ...tokens,
-      };
-    } catch (error) {
-      logger.error("Error in login:", error);
-      throw error;
-    }
-  }
+  //     return {
+  //       user: this.sanitizeUser(user),
+  //       ...tokens,
+  //     };
+  //   } catch (error) {
+  //     logger.error("Error in login:", error);
+  //     throw error;
+  //   }
+  // }
 
   static async refreshToken(refreshToken: string) {
     try {

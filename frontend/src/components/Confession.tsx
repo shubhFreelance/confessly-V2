@@ -35,14 +35,15 @@ export const ConfessionCreate: React.FC = () => {
   const [content, setContent] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim()) return;
+    if (!content.trim() || !user?.collegeName) return;
 
     setIsSubmitting(true);
     try {
-      await confessionAPI.createConfession(content, isAnonymous);
+      await confessionAPI.createConfession(content, user.collegeName);
       setContent('');
       setIsAnonymous(false);
     } catch (error) {

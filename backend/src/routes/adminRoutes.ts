@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express from 'express';
 import { 
   blockUser, 
   unblockUser,
@@ -7,16 +7,21 @@ import {
   getColleges,
   getAdminStats
 } from '../controllers/userController';
-import { authenticate, authorize } from '../middleware/auth';
+import { auth, authorize } from '../middleware/auth';
+import { updateReportedConfession, getCollegeUsers, getCollegeContent, getCollegeStats } from '../controllers/adminController';
 
-const router = Router();
+const router = express.Router();
 
 // Admin only routes
-router.post('/users/:userId/block', authenticate, authorize('admin'), blockUser);
-router.post('/users/:userId/unblock', authenticate, authorize('admin'), unblockUser);
-router.get('/reported-confessions', authenticate, authorize('admin'), getReportedConfessions);
-router.get('/blocked-users', authenticate, authorize('admin'), getBlockedUsers);
-router.get('/colleges', authenticate, authorize('admin'), getColleges);
-router.get('/stats', authenticate, authorize('admin'), getAdminStats);
+router.post('/users/:userId/block', auth, authorize('admin'), blockUser);
+router.post('/users/:userId/unblock', auth, authorize('admin'), unblockUser);
+router.get('/reported-confessions', auth, authorize('admin'), getReportedConfessions);
+router.put('/reported-confessions/:reportId', auth, authorize('admin'), updateReportedConfession);
+router.get('/blocked-users', auth, authorize('admin'), getBlockedUsers);
+router.get('/colleges', auth, authorize('admin'), getColleges);
+router.get('/stats', auth, authorize('admin'), getAdminStats);
+router.get('/college-users', auth, authorize('admin'), getCollegeUsers);
+router.get('/college-content', auth, authorize('admin'), getCollegeContent);
+router.get('/college-stats', auth, authorize('admin'), getCollegeStats);
 
 export default router; 

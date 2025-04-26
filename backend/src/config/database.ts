@@ -18,20 +18,57 @@ const options = {
   retryReads: true
 };
 
+// Create indexes
+// const createIndexes = async () => {
+//   try {
+//     // User indexes
+//     await mongoose.model('User').createIndexes([
+//       { key: { email: 1 }, unique: true, name: 'email_unique' },
+//       { key: { username: 1 }, unique: true, name: 'username_unique' },
+//       { key: { confessionLink: 1 }, unique: true, name: 'confessionLink_unique' },
+//       { key: { 'stats.weeklyRank': -1 }, name: 'weeklyRank_desc' },
+//       { key: { 'stats.monthlyRank': -1 }, name: 'monthlyRank_desc' }
+//     ]);
+
+//     // Confession indexes
+//     await mongoose.model('Confession').createIndexes([
+//       { key: { author: 1 }, name: 'author_idx' },
+//       { key: { collegeName: 1 }, name: 'collegeName_idx' },
+//       { key: { tags: 1 }, name: 'tags_idx' },
+//       { key: { createdAt: -1 }, name: 'createdAt_desc' },
+//       { key: { likes: -1 }, name: 'likes_desc' },
+//       { key: { views: -1 }, name: 'views_desc' }
+//     ]);
+
+//     // Notification indexes
+//     await mongoose.model('Notification').createIndexes([
+//       { key: { recipient: 1 }, name: 'recipient_idx' },
+//       { key: { createdAt: -1 }, name: 'createdAt_desc' },
+//       { key: { isRead: 1 }, name: 'isRead_idx' }
+//     ]);
+
+//     logger.info('Database indexes created successfully');
+//   } catch (error) {
+//     logger.error('Error creating database indexes:', error);
+//     throw error;
+//   }
+// };
+
 // Connect to database
 export const connectDB = async () => {
   try {
     const conn = await mongoose.connect(config.mongoURI);
     logger.info(`MongoDB Connected: ${conn.connection.host}`);
 
-    // Create indexes for User model
-    await mongoose.model('User').createIndexes();
+    // Let Mongoose handle index creation through schema definitions
+    // This will use the indexes defined in each model's schema
+    await Promise.all([
+      mongoose.model('User').syncIndexes(),
+      mongoose.model('Confession').syncIndexes(),
+      mongoose.model('Notification').syncIndexes()
+    ]);
 
-    // Create indexes for Confession model
-    await mongoose.model('Confession').createIndexes();
-
-    // Create indexes for Notification model
-    await mongoose.model('Notification').createIndexes();
+    logger.info('Database indexes synchronized successfully');
 
     // Handle connection events
     mongoose.connection.on('error', (error) => {

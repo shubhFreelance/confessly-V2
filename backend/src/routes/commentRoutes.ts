@@ -1,4 +1,5 @@
-import { Router } from 'express';
+import express from 'express';
+import { auth } from '../middleware/auth';
 import {
   createComment,
   getComments,
@@ -6,23 +7,22 @@ import {
   deleteComment,
   reportComment
 } from '../controllers/commentController';
-import { authenticate } from '../middleware/auth';
 
-const router = Router();
+const router = express.Router();
 
 // Create a new comment
-router.post('/', authenticate, createComment);
+router.post('/', auth, createComment);
 
 // Get comments for a confession
-router.get('/:confessionId', getComments);
+router.get('/:confessionId', auth, getComments);
 
 // Update a comment
-router.put('/:id', authenticate, updateComment);
+router.put('/:commentId', auth, updateComment);
 
 // Delete a comment
-router.delete('/:id', authenticate, deleteComment);
+router.delete('/:commentId', auth, deleteComment);
 
 // Report a comment
-router.post('/:id/report', authenticate, reportComment);
+router.post('/:id/report', auth, reportComment);
 
 export default router; 

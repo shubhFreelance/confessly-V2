@@ -1,10 +1,14 @@
-import { Router } from 'express';
-import { updateSubscription } from '../controllers/userController';
-import { authenticate } from '../middleware/auth';
+import express from 'express';
+import { auth } from '../middleware/auth';
+import { getSubscriptionPlans, subscribe, unsubscribe } from '../controllers/subscriptionController';
 
-const router = Router();
+const router = express.Router();
 
-// Update user subscription
-router.put('/', authenticate, updateSubscription);
+// Public routes
+router.get('/plans', getSubscriptionPlans);
+
+// Protected routes
+router.post('/subscribe', auth, subscribe);
+router.post('/unsubscribe', auth, unsubscribe);
 
 export default router; 

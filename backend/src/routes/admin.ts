@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate, authorize } from '../middleware/auth';
+import { auth, authorize } from '../middleware/auth';
 import {
   getReportedConfessions,
   updateReportedConfession,
@@ -11,10 +11,15 @@ import {
 const router = Router();
 
 // Admin only routes
-router.get('/reported-confessions', authenticate, authorize('admin'), getReportedConfessions);
-router.put('/reported-confessions/:reportId', authenticate, authorize('admin'), updateReportedConfession);
-router.get('/college-users', authenticate, authorize('admin'), getCollegeUsers);
-router.get('/college-content', authenticate, authorize('admin'), getCollegeContent);
-router.get('/college-stats', authenticate, authorize('admin'), getCollegeStats);
+router.get('/reported-confessions', auth, authorize('admin'), getReportedConfessions);
+router.put('/reported-confessions/:reportId', auth, authorize('admin'), updateReportedConfession);
+router.get('/college-users', auth, authorize('admin'), getCollegeUsers);
+router.get('/college-content', auth, authorize('admin'), getCollegeContent);
+router.get('/college-stats', auth, authorize('admin'), getCollegeStats);
+
+router.get('/users', auth, authorize('admin'), (req, res) => {
+  // TODO: Implement get all users
+  res.json({ message: 'Get all users' });
+});
 
 export default router; 

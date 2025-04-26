@@ -1,10 +1,11 @@
-import { Router } from 'express';
-import { getCollegeLeaderboard } from '../controllers/userController';
-import { authenticate } from '../middleware/auth';
+import express from 'express';
+import { auth } from '../middleware/auth';
+import { getCollegeRankings, getUserRankings } from '../controllers/rankingController';
 
-const router = Router();
+const router = express.Router();
 
-// Get college leaderboard
-router.get('/college/:collegeName', authenticate, getCollegeLeaderboard);
+// Protected routes
+router.get('/college', auth, getCollegeRankings);
+router.get('/user', auth, getUserRankings);
 
 export default router; 

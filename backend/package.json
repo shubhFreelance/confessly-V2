@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "Backend for Campus Confessions - Anonymous Confession Platform",
   "main": "dist/server.js",
- "scripts": {
-  "start": "nodemon server.js",
-  "dev": "ts-node-dev src/server.ts",
-  "build": "tsc",
-  "test": "jest",
-  "lint": "eslint . --ext .ts"
-},
+  "scripts": {
+    "start": "nodemon server.js",
+    "dev": "ts-node-dev src/server.ts",
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .ts"
+  },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",

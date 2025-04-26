@@ -11,6 +11,7 @@ import { Confession } from '../models/Confession';
 import os from 'os';
 import { ExportService } from '../services/exportService';
 import path from 'path';
+import * as AnalyticsService from '../services/analyticsService';
 
 interface AuthRequest extends Request {
   user?: any;
@@ -358,5 +359,40 @@ export const exportAnalyticsData = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error('Error exporting analytics data:', error);
     res.status(500).json({ message: 'Error exporting analytics data' });
+  }
+};
+
+// User analytics
+export const getUserAnalytics = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user._id;
+    const analytics = await AnalyticsService.getUserAnalytics(userId);
+    res.json(analytics);
+  } catch (error) {
+    console.error('Error getting user analytics:', error);
+    res.status(500).json({ message: 'Error fetching user analytics' });
+  }
+};
+
+// College analytics
+export const getCollegeAnalytics = async (req: Request, res: Response) => {
+  try {
+    const { collegeName } = req.user;
+    const analytics = await AnalyticsService.getCollegeAnalytics(collegeName);
+    res.json(analytics);
+  } catch (error) {
+    console.error('Error getting college analytics:', error);
+    res.status(500).json({ message: 'Error fetching college analytics' });
+  }
+};
+
+// Platform analytics
+export const getPlatformAnalytics = async (req: Request, res: Response) => {
+  try {
+    const analytics = await AnalyticsService.getPlatformAnalytics();
+    res.json(analytics);
+  } catch (error) {
+    console.error('Error getting platform analytics:', error);
+    res.status(500).json({ message: 'Error fetching platform analytics' });
   }
 }; 

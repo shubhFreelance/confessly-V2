@@ -1,36 +1,16 @@
-import { Router } from 'express';
-import { getLeaderboard, getStats, updateRankings } from '../controllers/analyticsController';
-import { authenticate, authorize } from '../middleware/auth';
-import {
-  trackUserBehavior,
-  getUserBehaviorAnalytics,
-  getContentPerformanceAnalytics,
-  getSystemPerformanceMetrics,
-  getAnalyticsDashboard
-} from '../controllers/analyticsController';
+import express from 'express';
+import { auth, authorize } from '../middleware/auth';
+import { getUserAnalytics, getCollegeAnalytics, getPlatformAnalytics } from '../controllers/analyticsController';
 
-const router = Router();
+const router = express.Router();
 
-// Get college leaderboard
-router.get('/leaderboard', getLeaderboard);
+// User analytics
+router.get('/user', auth, getUserAnalytics);
 
-// Get college statistics
-router.get('/stats', authenticate, getStats);
+// College analytics (admin only)
+router.get('/college', auth, authorize('admin'), getCollegeAnalytics);
 
-// Update user rankings (admin only)
-router.post('/update-rankings', authenticate, authorize('admin'), updateRankings);
+// Platform analytics (admin only)
+router.get('/platform', auth, authorize('admin'), getPlatformAnalytics);
 
-// User behavior tracking
-router.post('/track', authenticate, trackUserBehavior);
-router.get('/user-behavior', authenticate, authorize('admin'), getUserBehaviorAnalytics);
-
-// Content performance
-router.get('/content-performance', authenticate, authorize('admin'), getContentPerformanceAnalytics);
-
-// System performance
-router.get('/system-performance', authenticate, authorize('admin'), getSystemPerformanceMetrics);
-
-// Analytics dashboard
-router.get('/dashboard', authenticate, authorize('admin'), getAnalyticsDashboard);
-
-export default router; 
+export default router;

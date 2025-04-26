@@ -100,7 +100,8 @@ export const getCollegeStats = async (): Promise<CollegeStats[]> => {
       const likes = await Like.find({ collegeName: college });
 
       const activeUsers = users.filter(user => {
-        const lastActivity = new Date(user.updatedAt);
+        const lastActivity = user.stats.activityLog[user.stats.activityLog.length - 1]?.timestamp;
+        if (!lastActivity) return false;
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         return lastActivity > thirtyDaysAgo;
@@ -253,4 +254,37 @@ export class AnalyticsService {
       throw error;
     }
   }
-} 
+}
+
+export const getUserAnalytics = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) throw new Error('User not found');
+  
+  return {
+    profileVisits: user.stats.profileVisits,
+    totalConfessions: user.stats.totalConfessions,
+    totalLikes: user.stats.totalLikes,
+    weeklyRank: user.stats.weeklyRank,
+    monthlyRank: user.stats.monthlyRank
+  };
+};
+
+export const getCollegeAnalytics = async (collegeName: string) => {
+  const users = await User.find({ collegeName });
+  return {
+    totalUsers: users.length,
+    activeUsers: users.filter(u => u.stats.activityLog.length > 0).length,
+    totalConfessions: users.reduce((sum, u) => sum + u.stats.totalConfessions, 0),
+    totalLikes: users.reduce((sum, u) => sum + u.stats.totalLikes, 0)
+  };
+};
+
+export const getPlatformAnalytics = async () => {
+  const [totalUsers, totalConfessions, activeUsers] = await Promise.all([
+    User.countDocuments(),
+    Confession.countDocuments(),
+    User.countDocuments({ 'stats.lastActive': { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } })
+  ]);
+  
+  return { totalUsers, totalConfessions, activeUsers };
+}; 

@@ -1,7 +1,6 @@
-import { Router } from 'express';
+import express from "express";
 import {
   register,
-  login,
   getProfile,
   updateProfile,
   updateSubscription,
@@ -9,25 +8,25 @@ import {
   getConfessionLink,
   getProfileByLink,
   getUserStats,
-  getMessageCount
-} from '../controllers/userController';
-import { authenticate } from '../middleware/auth';
-import { userValidation } from '../middleware/validation';
+  getMessageCount,
+} from "../controllers/userController";
+import { auth } from "../middleware/auth";
+import { userValidation } from "../middleware/validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
-router.post('/register', userValidation, register);
-router.post('/login', login);
-router.get('/confession-link/:username', getConfessionLink);
-router.get('/profile/:confessionLink', getProfileByLink);
+router.post("/register", userValidation, register);
+// router.post("/login", login);
+router.get("/confession-link/:username", getConfessionLink);
+router.get("/profile/:confessionLink", getProfileByLink);
 
 // Protected routes
-router.get('/profile', authenticate, getProfile);
-router.put('/profile', authenticate, userValidation, updateProfile);
-router.put('/subscription', authenticate, updateSubscription);
-router.delete('/', authenticate, deleteAccount);
-router.get('/stats', authenticate, getUserStats);
-router.get('/message-count', authenticate, getMessageCount);
+router.get("/profile", auth, getProfile);
+router.put("/profile", auth, userValidation, updateProfile);
+router.put("/subscription", auth, updateSubscription);
+router.delete("/account", auth, deleteAccount);
+router.get("/stats", auth, getUserStats);
+router.get("/message-count", auth, getMessageCount);
 
-export default router; 
+export default router;
