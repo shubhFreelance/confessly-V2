@@ -13,15 +13,15 @@ interface Confession {
   content: string;
   isAnonymous: boolean;
   createdAt: string;
-  author?: {
-    username: string;
-    college: string;
-  };
+  author: string | { username: string; college: string };
   reactions: {
     type: string;
     count: number;
   }[];
   comments: number;
+  likes: number;
+  isHidden: boolean;
+  isReported: boolean;
 }
 
 interface ConfessionListProps {
@@ -38,6 +38,8 @@ export const ConfessionList: React.FC<ConfessionListProps> = ({ filter: initialF
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  console.log(confessions);
+
   const fetchConfessions = async () => {
     try {
       setLoading(true);
@@ -47,14 +49,21 @@ export const ConfessionList: React.FC<ConfessionListProps> = ({ filter: initialF
         filter,
         search,
       });
+      console.log(response);
 
       if (page === 1) {
-        setConfessions(response.data || []);
+        setConfessions(response.confessions?.map(c => ({
+          ...c,
+          author: c.author || 'Anonymous'
+        })) || []);
       } else {
-        setConfessions((prev) => [...prev, ...(response.data || [])]);
+        setConfessions(prev => [...prev, ...(response.confessions?.map(c => ({
+          ...c,
+          author: c.author || 'Anonymous'
+        })) || [])]);
       }
 
-      setHasMore(response.hasMore);
+      setHasMore(response.pagination?.currentPage < response.pagination?.totalPages);
     } catch (error) {
       toast({
         title: 'Error',

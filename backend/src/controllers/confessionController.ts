@@ -5,6 +5,7 @@ import { User, IUser } from "../models/User";
 import { Notification } from "../models/Notification";
 import { profanityFilter } from "../utils/profanityFilter"; // We'll create this later
 import mongoose from "mongoose";
+import { Like } from "../models/Like";
 
 interface AuthRequest extends Request {
   user?: IUser;
@@ -64,12 +65,13 @@ export const createConfession = async (req: AuthRequest, res: Response) => {
 };
 
 // Get confessions with pagination and filters
-export const getConfessions = async (req: Request, res: Response) => {
+export const getConfessions = async (req: AuthRequest, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const collegeName = req.query.collegeName as string;
     const skip = (page - 1) * limit;
+    const userId = req.user?._id;
 
     const query = collegeName ? { collegeName } : {};
 
@@ -89,22 +91,38 @@ export const getConfessions = async (req: Request, res: Response) => {
 
     const total = await Confession.countDocuments(query);
 
+    // Get user's likes if user is authenticated
+    const userLikes = userId 
+      ? await Like.find({ user: userId, confession: { $in: confessions.map(c => c._id) } })
+      : [];
+    
+    const userLikedConfessions = new Set(userLikes.map(like => like.confession.toString()));
+
     res.json({
-      confessions: confessions.map((confession) => ({
-        id: confession._id,
-        content: confession.content,
-        author:
-          confession.isAnonymous || !confession.author
+      confessions: confessions.map((confession) => {
+        const doc = confession.toObject() as IConfession & { _id: mongoose.Types.ObjectId };
+        return {
+          id: doc._id,
+          content: doc.content,
+          isAnonymous: doc.isAnonymous,
+          createdAt: doc.createdAt,
+          author: doc.isAnonymous || !doc.author
             ? "Anonymous"
-            : "username" in confession.author
-            ? confession.author.username
-            : "Unknown",
-        collegeName: confession.collegeName,
-        likes: confession.likes,
-        dislikes: confession.dislikes,
-        comments: confession.comments,
-        createdAt: confession.createdAt,
-      })),
+            : {
+                username: (doc.author as IUser).username,
+                college: doc.collegeName
+              },
+          reactions: Array.from(doc.reactions.entries()).map(([type, count]) => ({
+            type,
+            count
+          })),
+          comments: doc.comments.length,
+          likes: doc.likes,
+          isHidden: doc.isHidden,
+          isReported: doc.isReported,
+          likedByUser: userId ? userLikedConfessions.has(doc._id.toString()) : false
+        };
+      }),
       pagination: {
         currentPage: page,
         totalPages: Math.ceil(total / limit),

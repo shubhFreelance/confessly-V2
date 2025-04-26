@@ -39,6 +39,10 @@ const confessionSchema = new Schema<IConfession>({
     type: Number,
     default: 0
   },
+  comments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Comment'
+  }],
   reactions: {
     type: Map,
     of: Number,

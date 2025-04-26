@@ -20,6 +20,7 @@ interface Confession {
   likes: number;
   isHidden: boolean;
   isReported: boolean;
+  likedByUser: boolean;
 }
 
 interface GetConfessionsParams {
@@ -30,9 +31,18 @@ interface GetConfessionsParams {
 }
 
 interface GetConfessionsResponse {
-  data: Confession[];
-  hasMore: boolean;
-  total: number;
+  confessions: Confession[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalConfessions: number;
+  };
+}
+
+interface ReactionResponse {
+  message: string;
+  reactions: { [key: string]: number };
+  likedByUser: boolean;
 }
 
 export const getConfessions = async (params: GetConfessionsParams): Promise<GetConfessionsResponse> => {
@@ -58,6 +68,7 @@ export const reportConfession = async (id: string, reason: string): Promise<void
   await axios.post(`${API_URL}/confessions/${id}/report`, { reason });
 };
 
-export const addReaction = async (id: string, type: string): Promise<void> => {
-  await axios.post(`${API_URL}/confessions/${id}/reactions`, { type });
+export const addReaction = async (id: string, type: string): Promise<ReactionResponse> => {
+  const response = await axios.post(`${API_URL}/reactions/${id}`, { reaction: type });
+  return response.data;
 }; 

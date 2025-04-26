@@ -6,7 +6,8 @@ import {
   createConfession,
   getConfessions,
   reactToConfession,
-  reportConfession
+  reportConfession,
+  getConfession
 } from '../controllers/confessionController';
 
 const router = express.Router();
@@ -46,6 +47,7 @@ const reportValidation = [
 // Routes
 router.post('/', auth, confessionLimiter, confessionValidation, createConfession);
 router.get('/', getConfessions);
+router.get('/:id', getConfession);
 router.post('/:confessionId/react', auth, reactionValidation, reactToConfession);
 router.post('/:confessionId/report', auth, reportValidation, reportConfession);
 

@@ -14,7 +14,7 @@ import analyticsRoutes from './routes/analyticsRoutes';
 import userRoutes from './routes/users';
 import adminRoutes from './routes/admin';
 import superadminRoutes from './routes/superadmin';
-
+import reactionRoutes from './routes/reactionRoutes';
 // Load environment variables
 dotenv.config();
 
@@ -48,6 +48,7 @@ mongoose.connect(MONGODB_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/confessions', confessionRoutes);
+app.use('/api/reactions', reactionRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/superadmin', superadminRoutes);
